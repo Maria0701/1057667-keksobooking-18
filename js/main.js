@@ -10,7 +10,7 @@ var getRandomElement = function (arr) {
 
 var getRandomArray = function (array) {
   var newArray = [];
-  for (var j = 0; j < getRandomInteger(1, array.length - 1); j++) {
+  for (var j = 0; j < getRandomInteger(1, array.length); j++) {
     newArray = array[j];
   }
   return newArray;
@@ -86,6 +86,17 @@ var createCardElement = function (card) {
   cardElement.querySelector('.popup__type').textContent = generateAds(card).offer.type;
   cardElement.querySelector('.popup__text--capacity').innerHTML = generateAds(card).offer.rooms + ' комнаты для ' + generateAds(card).offer.guests + ' гостей.';
   cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + generateAds(card).offer.checkin + ', выезд до ' + generateAds(card).offer.checkout + '.';
+  var featuresString = '';
+  for (var i = 0; i < generateAds(card).offer.features.length; i++) {
+    featuresString += '<li class="popup__feature popup__feature--' + generateAds(card).offer.features + '"></li>';
+  }
+  cardElement.querySelector('.popup__features').innerHTML = featuresString;
+  cardElement.querySelector('.popup__description').textContent = generateAds(card).offer.description;
+  var photosString = '';
+  for (var j = 0; j < generateAds(card).offer.photos.length; j++) {
+    photosString += '<img src=' + generateAds(card).offer.photos + ' class="popup__photo" width="45" height="40" alt="Фотография жилья">';
+  }
+  cardElement.querySelector('.popup__photos').innerHTML = photosString;
 
   return cardElement;
 };
