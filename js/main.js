@@ -1,36 +1,31 @@
 'use strict';
 
-var getRandomInteger = function randomInteger(min, max) {
+var getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
 var getRandomElement = function (arr) {
-  return getRandomInteger(0, arr.length - 1);
+  return arr[getRandomInteger(0, arr.length - 1)];
 };
 
 var getRandomArray = function (array) {
   var newArray = [];
   for (var j = 0; j < getRandomInteger(1, array.length - 1); j++) {
-    newArray = toString(array[j]);
+    newArray = array[j];
   }
   return newArray;
 };
 
+
 var bookingMap = document.querySelector('.map');
 bookingMap.classList.remove('map--faded');
 
-var getRandomString = function (number) {
-  var string = '';
-  while (string.length < number) {
-    string += Math.random().toString(36);
-  }
-  return string.substr(0, number);
-};
-
+var ACCOMODATION_TITLE = ['Сдам квартиру', 'Жилье для некурящих', 'Сдам аппартаменты', 'Мебелированные комнаты'];
 var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var CHEKIN_OUT_TIME = ['12:00', '13:00', '14:00'];
 var ACCOMODATION_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var ACCOMODATION_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var ACCOMODATION_DESCRIPTION = ['КВАРТИРА ЦЕЛИКОМ Студия в центре Минска, ст. м. Площадь Победы', 'ОТДЕЛЬНАЯ КОМНАТА В ЖИЛЬЕ ТИПА КВАРТИРА Уютная комната', 'КВАРТИРА ЦЕЛИКОМ Доступные апартаменты в самом центре Минска'];
 var MIN_Y = 130;
 var MAX_Y = 630;
 var MAX_X = 1200;
@@ -38,34 +33,30 @@ var KEKS_FRIENDS = 8;
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 40;
 
-var generateKeksLocation = function () {
-  return {
+var generateAds = function (i) {
+  var userLocation = {
     x: getRandomInteger(0, MAX_X),
     y: getRandomInteger(MIN_Y, MAX_Y)
   };
-};
-
-var generateOfferOptions = function () {
   return {
-    title: getRandomString(getRandomInteger(0, 100)),
-    address: '{{location.' + generateKeksLocation().x + '}}, {{location.' + generateKeksLocation().y + '}}',
-    price: getRandomInteger(0, 100),
-    type: ACCOMODATION_TYPE[getRandomElement(ACCOMODATION_TYPE)],
-    rooms: getRandomInteger(0, 10),
-    guests: getRandomInteger(0, 10),
-    checkin: CHEKIN_OUT_TIME[getRandomElement(CHEKIN_OUT_TIME)],
-    checkout: CHEKIN_OUT_TIME[getRandomElement(CHEKIN_OUT_TIME)],
-    features: getRandomArray(ACCOMODATION_FEATURES),
-    description: getRandomString(getRandomInteger(0, 100)),
-    photos: getRandomArray(ACCOMODATION_PHOTOS)
-  };
-};
-
-var generateUser = function () {
-  return {
-    avatar: 'img/avatars/user0' + getRandomInteger(1, KEKS_FRIENDS) + '.png',
-    location: generateKeksLocation(),
-    offer: generateOfferOptions()
+    avatar: 'img/avatars/user0' + i + '.png',
+    location: {
+      x: userLocation.x,
+      y: userLocation.y
+    },
+    offer: {
+      title: getRandomElement(ACCOMODATION_TITLE),
+      address: '{{location.' + userLocation.x + '}}, {{location.' + userLocation.y + '}}',
+      price: getRandomInteger(0, 100),
+      type: getRandomElement(ACCOMODATION_TYPE),
+      rooms: getRandomInteger(0, 10),
+      guests: getRandomInteger(0, 10),
+      checkin: getRandomElement(CHEKIN_OUT_TIME),
+      checkout: getRandomElement(CHEKIN_OUT_TIME),
+      features: getRandomArray(ACCOMODATION_FEATURES),
+      description: getRandomElement(ACCOMODATION_DESCRIPTION),
+      photos: getRandomArray(ACCOMODATION_PHOTOS)
+    }
   };
 };
 
@@ -73,21 +64,37 @@ var pinsMap = document.querySelector('.map__pins');
 var pinKeksTemplate = document.querySelector('#pin')
 .content
 .querySelector('.map__pin');
+var cardKeksTemplate = document.querySelector('#card')
+.content
+.querySelector('.map__card');
 
 var createPinElement = function (pin) {
   var pinElement = pinKeksTemplate.cloneNode(true);
-  pinElement.style.left = generateUser(pin).location.x - PIN_WIDTH / 2 + 'px';
-  pinElement.style.top = generateUser(pin).location.y + PIN_HEIGHT + 'px';
-  pinElement.querySelector('img').alt = generateUser(pin).offer.title;
-  pinElement.querySelector('img').src = generateUser(pin).avatar;
+  pinElement.style.left = generateAds(pin).location.x - PIN_WIDTH / 2 + 'px';
+  pinElement.style.top = generateAds(pin).location.y + PIN_HEIGHT + 'px';
+  pinElement.querySelector('img').alt = generateAds(pin).offer.title;
+  pinElement.querySelector('img').src = generateAds(pin).avatar;
 
   return pinElement;
 };
 
-var fragment = document.createDocumentFragment(generateUser);
+
+var createCardElement = function (card) {
+  var cardElement = cardKeksTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = generateAds(card).offer.title;
+  cardElement.querySelector('.popup__text--price').innerHTML = generateAds(card).offer.price + '<span>/ночь</span>';
+  cardElement.querySelector('.popup__type').textContent = generateAds(card).offer.type;
+  cardElement.querySelector('.popup__text--capacity').innerHTML = generateAds(card).offer.rooms + ' комнаты для ' + generateAds(card).offer.guests + ' гостей.';
+  cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + generateAds(card).offer.checkin + ', выезд до ' + generateAds(card).offer.checkout + '.';
+
+  return cardElement;
+};
+
+var fragment = document.createDocumentFragment();
 
 for (var i = 0; i < KEKS_FRIENDS; i++) {
-  fragment.appendChild(createPinElement(generateUser()));
+  fragment.appendChild(createPinElement(generateAds()));
+  fragment.appendChild(createCardElement(generateAds()));
 }
 
 pinsMap.appendChild(fragment);
