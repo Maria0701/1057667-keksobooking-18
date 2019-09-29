@@ -35,9 +35,7 @@ var generateAds = function (i) {
     y: getRandomInteger(MIN_Y, MAX_Y)
   };
   return {
-    author: {
-      avatar: 'img/avatars/user0' + i + '.png'
-    },
+    avatar: 'img/avatars/user0' + i + '.png',
     location: {
       x: userLocation.x,
       y: userLocation.y
@@ -68,7 +66,7 @@ var createPinElement = function (ad) {
   pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
   pinElement.style.top = ad.location.y + PIN_HEIGHT + 'px';
   pinElement.querySelector('img').alt = ad.offer.title;
-  pinElement.querySelector('img').src = ad.author.avatar;
+  pinElement.querySelector('img').src = ad.avatar;
 
   return pinElement;
 };
