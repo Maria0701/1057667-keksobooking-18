@@ -9,7 +9,7 @@ var getRandomElement = function (arr) {
 };
 
 var getRandomArray = function (array) {
-  return array.slice(getRandomInteger(1, array.length - 1));
+  return array.slice(getRandomInteger(0, array.length));
 };
 
 
@@ -50,9 +50,8 @@ var generateAds = function (i) {
       checkin: getRandomElement(CHEKIN_OUT_TIME),
       checkout: getRandomElement(CHEKIN_OUT_TIME),
       features: getRandomArray(ACCOMODATION_FEATURES),
-      // features: ACCOMODATION_FEATURES.slice(getRandomInteger(1, ACCOMODATION_FEATURES.length - 1)),
       description: getRandomElement(ACCOMODATION_DESCRIPTION),
-      photos: ACCOMODATION_PHOTOS.slice(getRandomInteger(1, ACCOMODATION_PHOTOS.length - 1))
+      photos: getRandomArray(ACCOMODATION_PHOTOS)
     }
   };
 };
