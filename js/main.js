@@ -35,9 +35,7 @@ var generateAds = function (i) {
     y: getRandomInteger(MIN_Y, MAX_Y)
   };
   return {
-    author: {
-      avatar: 'img/avatars/user0' + i + '.png'
-    },
+    avatar: 'img/avatars/user0' + i + '.png',
     location: {
       x: userLocation.x,
       y: userLocation.y
@@ -68,7 +66,7 @@ var createPinElement = function (ad) {
   pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
   pinElement.style.top = ad.location.y + PIN_HEIGHT + 'px';
   pinElement.querySelector('img').alt = ad.offer.title;
-  pinElement.querySelector('img').src = ad.author.avatar;
+  pinElement.querySelector('img').src = ad.avatar;
 
   return pinElement;
 };
@@ -80,38 +78,3 @@ for (var i = 0; i < KEKS_FRIENDS; i++) {
 }
 
 pinsMap.appendChild(fragment);
-
-
-var accomodationMap = document.querySelector('.map');
-var accomodationFilters = accomodationMap.querySelector('.map__filters-container');
-
-var cardKeksTemplate = document.querySelector('#card')
-.content
-.querySelector('.map__card');
-
-var createCardElement = function (card) {
-  var cardElement = cardKeksTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent =
-  card.offer.title;
-  cardElement.querySelector('.popup__text--price').innerHTML = card.offer.price + '<span>/ночь</span>';
-  cardElement.querySelector('.popup__type').textContent = card.offer.type;
-  cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' комнаты для ' + generateAds(card).offer.guests + ' гостей.';
-  cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout + '.';
-  var featuresString = '';
-  for (var k = 0; k < card.offer.features.length; k++) {
-    featuresString += '<li class="popup__feature popup__feature--' + card.offer.features[k] + '"></li>';
-  }
-  cardElement.querySelector('.popup__features').innerHTML = featuresString;
-  cardElement.querySelector('.popup__description').textContent = card.offer.description;
-  var photosString = '';
-  for (var j = 0; j < card.offer.photos.length; j++) {
-    photosString += '<img src=' + card.offer.photos[j] + ' class="popup__photo" width="45" height="40" alt="Фотография жилья">';
-  }
-  cardElement.querySelector('.popup__photos').innerHTML = photosString;
-  cardElement.querySelector('.popup__avatar').src =
-  card.author.avatar;
-
-  return cardElement;
-};
-
-accomodationMap.insertBefore(createCardElement(generateAds(getRandomInteger(1, KEKS_FRIENDS))), accomodationFilters);
