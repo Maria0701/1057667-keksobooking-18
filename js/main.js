@@ -1,4 +1,8 @@
 'use strict';
+var ESCAPE_BUTTON = 27;
+var ENTER_BUTTON = 13;
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 65;
 
 var getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -14,7 +18,49 @@ var getRandomArray = function (array) {
 
 
 var bookingMap = document.querySelector('.map');
-// bookingMap.classList.remove('map--faded');
+var bookingForm = document.querySelector('.ad-form');
+var mainPinController = bookingMap.querySelector('.map__pin--main');
+
+var mainPinLocationX = Math.round(parseInt(mainPinController.style.left, 10) - MAIN_PIN_WIDTH / 2);
+var mainPinLocationY = Math.round(parseInt(mainPinController.style.top, 10) - MAIN_PIN_HEIGHT);
+
+var mapActivityHandler = function () {
+  bookingMap.classList.remove('map--faded');
+  var formDisabledFields = bookingForm.querySelectorAll(':disabled');
+  for (var i = 0; i < formDisabledFields.length; i++) {
+    formDisabledFields[i].disabled = false;
+  }
+  bookingForm.querySelector('input[name="address"]').value = mainPinLocationX + ', '
+  + mainPinLocationY;
+};
+
+mainPinController.addEventListener('mousedown', mapActivityHandler);
+
+mainPinController.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_BUTTON) {
+    mapActivityHandler();
+  }
+});
+
+var numberOfRooms = bookingForm.querySelector('select[name="rooms"]');
+var numberOfGuests = bookingForm.querySelector('select[name="capacity"]');
+var changeOfNumberHandler = function () {
+  if (numberOfRooms.value === numberOfGuests.value) {
+    numberOfRooms.setCustomValidity('');
+  } else {
+    numberOfRooms.setCustomValidity('Количество гостей не совпадает с количеством комнат');
+  }
+};
+
+numberOfRooms.addEventListener('change', function () {
+  changeOfNumberHandler();
+  numberOfRooms.removeEventListener('change', changeOfNumberHandler);
+});
+
+numberOfGuests.addEventListener('change', function () {
+  changeOfNumberHandler();
+  numberOfGuests.removeEventListener('change', changeOfNumberHandler);
+});
 
 var ACCOMODATION_TITLE = ['Сдам квартиру', 'Жилье для некурящих', 'Сдам аппартаменты', 'Мебелированные комнаты'];
 var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -35,7 +81,9 @@ var generateAds = function (i) {
     y: getRandomInteger(MIN_Y, MAX_Y)
   };
   return {
-    avatar: 'img/avatars/user0' + i + '.png',
+    author: {
+      avatar: 'img/avatars/user0' + i + '.png'
+    },
     location: {
       x: userLocation.x,
       y: userLocation.y
@@ -66,7 +114,7 @@ var createPinElement = function (ad) {
   pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
   pinElement.style.top = ad.location.y + PIN_HEIGHT + 'px';
   pinElement.querySelector('img').alt = ad.offer.title;
-  pinElement.querySelector('img').src = ad.avatar;
+  pinElement.querySelector('img').src = ad.author.avatar;
 
   return pinElement;
 };
@@ -78,7 +126,6 @@ for (var i = 0; i < KEKS_FRIENDS; i++) {
 }
 
 // pinsMap.appendChild(fragment);
-
 
 var accomodationMap = document.querySelector('.map');
 var accomodationFilters = accomodationMap.querySelector('.map__filters-container');
