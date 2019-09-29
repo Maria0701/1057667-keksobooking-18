@@ -14,7 +14,7 @@ var getRandomArray = function (array) {
 
 
 var bookingMap = document.querySelector('.map');
-bookingMap.classList.remove('map--faded');
+// bookingMap.classList.remove('map--faded');
 
 var ACCOMODATION_TITLE = ['Сдам квартиру', 'Жилье для некурящих', 'Сдам аппартаменты', 'Мебелированные комнаты'];
 var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -79,7 +79,7 @@ for (var i = 0; i < KEKS_FRIENDS; i++) {
   fragment.appendChild(createPinElement(generateAds(i + 1)));
 }
 
-pinsMap.appendChild(fragment);
+// pinsMap.appendChild(fragment);
 
 
 var accomodationMap = document.querySelector('.map');
@@ -114,4 +114,4 @@ var createCardElement = function (card) {
   return cardElement;
 };
 
-accomodationMap.insertBefore(createCardElement(generateAds(getRandomInteger(1, KEKS_FRIENDS))), accomodationFilters);
+// accomodationMap.insertBefore(createCardElement(generateAds(getRandomInteger(1, KEKS_FRIENDS))), accomodationFilters);
