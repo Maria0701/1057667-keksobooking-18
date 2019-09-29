@@ -38,7 +38,6 @@ var generateAds = function (i) {
     author: {
       avatar: 'img/avatars/user0' + i + '.png'
     },
-
     location: {
       x: userLocation.x,
       y: userLocation.y
@@ -69,9 +68,7 @@ var createPinElement = function (ad) {
   pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
   pinElement.style.top = ad.location.y + PIN_HEIGHT + 'px';
   pinElement.querySelector('img').alt = ad.offer.title;
-
   pinElement.querySelector('img').src = ad.author.avatar;
-
 
   return pinElement;
 };
@@ -83,8 +80,6 @@ for (var i = 0; i < KEKS_FRIENDS; i++) {
 }
 
 pinsMap.appendChild(fragment);
-
-
 
 var accomodationMap = document.querySelector('.map');
 var accomodationFilters = accomodationMap.querySelector('.map__filters-container');
@@ -119,4 +114,3 @@ var createCardElement = function (card) {
 };
 
 accomodationMap.insertBefore(createCardElement(generateAds(getRandomInteger(1, KEKS_FRIENDS))), accomodationFilters);
-
