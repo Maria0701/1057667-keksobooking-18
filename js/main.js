@@ -93,7 +93,15 @@ var createCardElement = function (card) {
   cardElement.querySelector('.popup__title').textContent =
   card.offer.title;
   cardElement.querySelector('.popup__text--price').innerHTML = card.offer.price + '<span>/ночь</span>';
-  cardElement.querySelector('.popup__type').textContent = card.offer.type;
+  switch (card.offer.type) {
+    case 'flat': cardElement.querySelector('.popup__type').textContent = 'Квартира';
+      break;
+    case 'bungalo': cardElement.querySelector('.popup__type').textContent = 'bungalo';
+      break;
+    case 'house': cardElement.querySelector('.popup__type').textContent = 'Дом';
+      break;
+    default: cardElement.querySelector('.popup__type').textContent = 'Дворец';
+  }
   cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей.';
   cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout + '.';
   var featuresString = '';
