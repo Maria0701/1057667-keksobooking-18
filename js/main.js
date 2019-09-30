@@ -15,7 +15,6 @@ var getRandomArray = function (array) {
   return array.slice(getRandomInteger(0, array.length));
 };
 
-
 var bookingMap = document.querySelector('.map');
 var bookingForm = document.querySelector('.ad-form');
 var mainPinController = bookingMap.querySelector('.map__pin--main');
@@ -25,6 +24,7 @@ var mainPinLocationY = Math.round(parseInt(mainPinController.style.top, 10) - MA
 
 var mapActivityHandler = function () {
   bookingMap.classList.remove('map--faded');
+  bookingForm.classList.remove('ad-form--disabled');
   var formDisabledFields = bookingForm.querySelectorAll(':disabled');
   for (var i = 0; i < formDisabledFields.length; i++) {
     formDisabledFields[i].disabled = false;
@@ -50,16 +50,12 @@ var changeOfNumberHandler = function () {
     numberOfRooms.setCustomValidity('Количество гостей не совпадает с количеством комнат');
   }
 };
+if (numberOfRooms.value !== numberOfGuests.value) {
+  numberOfRooms.setCustomValidity('Количество гостей не совпадает с количеством комнат');
+} // проверка полей формы до addEventListener
 
-numberOfRooms.addEventListener('change', function () {
-  changeOfNumberHandler();
-  numberOfRooms.removeEventListener('change', changeOfNumberHandler);
-});
-
-numberOfGuests.addEventListener('change', function () {
-  changeOfNumberHandler();
-  numberOfGuests.removeEventListener('change', changeOfNumberHandler);
-});
+numberOfRooms.addEventListener('change', changeOfNumberHandler);
+numberOfGuests.addEventListener('change', changeOfNumberHandler);
 
 var ACCOMODATION_TITLE = ['Сдам квартиру', 'Жилье для некурящих', 'Сдам аппартаменты', 'Мебелированные комнаты'];
 var ACCOMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
