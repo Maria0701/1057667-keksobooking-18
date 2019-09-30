@@ -85,8 +85,8 @@ var accomodationMap = document.querySelector('.map');
 var accomodationFilters = accomodationMap.querySelector('.map__filters-container');
 
 var cardKeksTemplate = document.querySelector('#card')
-.content
-.querySelector('.map__card');
+  .content
+  .querySelector('.map__card');
 
 var createCardElement = function (card) {
   var cardElement = cardKeksTemplate.cloneNode(true);
@@ -94,7 +94,7 @@ var createCardElement = function (card) {
   card.offer.title;
   cardElement.querySelector('.popup__text--price').innerHTML = card.offer.price + '<span>/ночь</span>';
   cardElement.querySelector('.popup__type').textContent = card.offer.type;
-  cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' комнаты для ' + generateAds(card).offer.guests + ' гостей.';
+  cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей.';
   cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout + '.';
   var featuresString = '';
   for (var k = 0; k < card.offer.features.length; k++) {
@@ -113,4 +113,4 @@ var createCardElement = function (card) {
   return cardElement;
 };
 
-accomodationMap.insertBefore(createCardElement(generateAds(getRandomInteger(1, KEKS_FRIENDS))), accomodationFilters);
+accomodationMap.insertBefore(createCardElement(generateAds(1)), accomodationFilters);
