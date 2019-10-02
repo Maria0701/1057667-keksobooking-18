@@ -45,10 +45,10 @@ var numberOfGuests = bookingForm.querySelector('select[name="capacity"]');
 var changeOfNumberHandler = function () {
   if (numberOfRooms.value === '100' && numberOfGuests.value === '0') {
     numberOfRooms.setCustomValidity('');
-  } else if (numberOfRooms.value < numberOfGuests.value || numberOfRooms.value !== '100' || numberOfGuests.value !== '0') {
-    numberOfRooms.setCustomValidity('Количество гостей больше больше количества комнат');
-  } else {
+  } else if (numberOfRooms.value >= numberOfGuests.value && numberOfRooms.value !== '100' && numberOfGuests.value !== '0') {
     numberOfRooms.setCustomValidity('');
+  } else {
+    numberOfRooms.setCustomValidity('Количество гостей больше больше количества комнат');
   }
 };
 changeOfNumberHandler();
