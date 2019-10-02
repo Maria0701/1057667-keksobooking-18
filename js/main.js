@@ -25,7 +25,7 @@ var ACCOMMODATION_DESCRIPTION = ['КВАРТИРА ЦЕЛИКОМ Студия �
 var MIN_Y = 130;
 var MAX_Y = 630;
 var MAX_X = 1200;
-var KEKS_FRIENDS = 8;
+var ADS_COUNT = 8;
 var PIN_WIDTH = 40;
 var PIN_HEIGHT = 40;
 
@@ -129,9 +129,12 @@ var createCardElement = function (card) {
 
 var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < KEKS_FRIENDS; i++) {
-  fragment.appendChild(createPinElement(generateAds(i + 1)));
+for (var i = 0; i < ADS_COUNT; i++) {
+  var advert = generateAds(i + 1);
+  if (i === 0) {
+    accommodationMap.insertBefore(createCardElement(advert), accommodationFilters);
+  }
+  fragment.appendChild(createPinElement(advert));
 }
 
 pinsMap.appendChild(fragment);
-accommodationMap.insertBefore(createCardElement(generateAds(i)), accommodationFilters);
