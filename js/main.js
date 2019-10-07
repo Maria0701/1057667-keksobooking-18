@@ -66,8 +66,8 @@ var MIN_Y = 130;
 var MAX_Y = 630;
 var MAX_X = 1200;
 var ADS_COUNT = 8;
-var PIN_WIDTH = 40;
-var PIN_HEIGHT = 40;
+// var PIN_WIDTH = 40;
+// var PIN_HEIGHT = 40;
 
 var generateAds = function (i) {
   var userLocation = {
@@ -99,19 +99,19 @@ var generateAds = function (i) {
 };
 
 // var pinsMap = document.querySelector('.map__pins');
-var pinKeksTemplate = document.querySelector('#pin')
-.content
-.querySelector('.map__pin');
-
-var createPinElement = function (ad) {
-  var pinElement = cardPopupTemplate.cloneNode(true);
-  pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
-  pinElement.style.top = ad.location.y + PIN_HEIGHT + 'px';
-  pinElement.querySelector('img').alt = ad.offer.title;
-  pinElement.querySelector('img').src = ad.author.avatar;
-
-  return pinElement;
-};
+// var pinKeksTemplate = document.querySelector('#pin')
+// .content
+// .querySelector('.map__pin');
+//
+// var createPinElement = function (ad) {
+//   var pinElement = cardPopupTemplate.cloneNode(true);
+//   pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
+//   pinElement.style.top = ad.location.y + PIN_HEIGHT + 'px';
+//   pinElement.querySelector('img').alt = ad.offer.title;
+//   pinElement.querySelector('img').src = ad.author.avatar;
+//
+//   return pinElement;
+// };
 
 
 var accommodationMap = document.querySelector('.map');
@@ -167,12 +167,12 @@ var createCardElement = function (card) {
   return cardElement;
 };
 
-var fragment = document.createDocumentFragment();
+// var fragment = document.createDocumentFragment();
 
 for (var i = 0; i < ADS_COUNT; i++) {
   var advert = generateAds(i + 1);
   if (i === 0) {
     accommodationMap.insertBefore(createCardElement(advert), accommodationFilters);
   }
-  fragment.appendChild(createPinElement(advert));
+//  fragment.appendChild(createPinElement(advert));
 }
