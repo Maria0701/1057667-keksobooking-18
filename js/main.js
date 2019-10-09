@@ -201,13 +201,13 @@ var mapActivityHandler = function () {
   pinsMap.appendChild(fragment);
   var advertPins = pinsMap.querySelectorAll('.map__pin');
 
-  var openFullCardEnterHandler = function (pin, card, evt) {
-    pin.addEventListener('keydown', function () {
-      if (evt.keyCode === ENTER_BUTTON) {
-        openFullCardHandler(card);
-      }
-    });
-  };
+  //  var openFullCardEnterHandler = function (pin, card, evt) {
+  //    pin.addEventListener('keydown', function () {
+  //      if (evt.keyCode === ENTER_BUTTON) {
+  //        openFullCardHandler(card);
+  //      }
+  //    });
+  //  };
 
   var openFullCardClickHandler = function (pin, card) {
     pin.addEventListener('click', function () {
