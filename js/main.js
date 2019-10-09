@@ -1,5 +1,6 @@
 'use strict';
 var ENTER_BUTTON = 13;
+var ESCAPE_BUTTON = 27;
 var MAIN_PIN_WIDTH = 65;
 var MAIN_PIN_HEIGHT = 65;
 
@@ -22,26 +23,49 @@ var mainPinController = bookingMap.querySelector('.map__pin--main');
 var mainPinLocationX = Math.round(parseInt(mainPinController.style.left, 10) - MAIN_PIN_WIDTH / 2);
 var mainPinLocationY = Math.round(parseInt(mainPinController.style.top, 10) - MAIN_PIN_HEIGHT);
 
-var mapActivityHandler = function () {
-  bookingMap.classList.remove('map--faded');
-  bookingForm.classList.remove('ad-form--disabled');
-  var formDisabledFields = bookingForm.querySelectorAll(':disabled');
-  for (var i = 0; i < formDisabledFields.length; i++) {
-    formDisabledFields[i].disabled = false;
-  }
-  bookingForm.querySelector('input[name="address"]').value = mainPinLocationX + ', ' + mainPinLocationY;
+// обработка формы
+var MAP_OFFER_TYPE_TO_PRICE = {
+  flat: '1000',
+  bungalo: '0',
+  house: '5000',
+  palace: '10000'
 };
-
-mainPinController.addEventListener('mousedown', mapActivityHandler);
-
-mainPinController.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_BUTTON) {
-    mapActivityHandler();
-  }
-});
-
 var numberOfRooms = bookingForm.querySelector('select[name="rooms"]');
 var numberOfGuests = bookingForm.querySelector('select[name="capacity"]');
+var accommodationType = bookingForm.querySelector('select[name="type"]');
+var accommodationPrice = bookingForm.querySelector('input[name="price"]');
+var checkInTime = bookingForm.querySelector('select[name="timein"]');
+var checkOutTime = bookingForm.querySelector('select[name="timeout"]');
+
+var accommodationTypeToPriceHandler = function () {
+  if (accommodationPrice.value >= 10000) {
+    accommodationType.value = 'palace';
+  } else if (accommodationPrice.value >= 5000 && accommodationPrice.value < 10000) {
+    accommodationType.value = 'house';
+  } else if (accommodationPrice.value >= 1000 && accommodationPrice.value < 5000) {
+    accommodationType.value = 'flat';
+  } else {
+    accommodationType.value = 'bungalo';
+  }
+};
+
+var accomodationMinPriceHandler = function () {
+  accommodationPrice.min = MAP_OFFER_TYPE_TO_PRICE[accommodationType.value];
+  accommodationPrice.placeholder = MAP_OFFER_TYPE_TO_PRICE[accommodationType.value];
+};
+
+var checkOutHandler = function () {
+  checkInTime.value = checkOutTime.value;
+};
+var checkInHandler = function () {
+  checkOutTime.value = checkInTime.value;
+};
+
+accommodationPrice.addEventListener('change', accommodationTypeToPriceHandler);
+accommodationType.addEventListener('change', accomodationMinPriceHandler);
+checkInTime.addEventListener('change', checkInHandler);
+checkOutTime.addEventListener('change', checkOutHandler);
+
 var changeOfNumberHandler = function () {
   if (numberOfRooms.value === '100' && numberOfGuests.value === '0') {
     numberOfRooms.setCustomValidity('');
@@ -99,7 +123,7 @@ var generateAds = function (i) {
 };
 
 var pinsMap = document.querySelector('.map__pins');
-var pinKeksTemplate = document.querySelector('#pin')
+var cardPopupTemplate = document.querySelector('#pin')
 .content
 .querySelector('.map__pin');
 var createPinElement = function (ad) {
@@ -167,8 +191,67 @@ var fragment = document.createDocumentFragment();
 
 for (var i = 0; i < ADS_COUNT; i++) {
   var advert = generateAds(i + 1);
-  if (i === 0) {
-    bookingMap.insertBefore(createCardElement(advert), accommodationFilters);
-  }
   fragment.appendChild(createPinElement(advert));
 }
+
+var mapActivityHandler = function () {
+  bookingMap.classList.remove('map--faded');
+  bookingForm.classList.remove('ad-form--disabled');
+  var formDisabledFields = bookingForm.querySelectorAll(':disabled');
+  pinsMap.appendChild(fragment);
+  var advertPins = pinsMap.querySelectorAll('.map__pin');
+
+  var openFullCardEnterHandler = function (pin, card, evt) {
+    pin.addEventListener('keydown', function () {
+      if (evt.keyCode === ENTER_BUTTON) {
+        openFullCardHandler(card);
+      }
+    });
+  };
+
+  var openFullCardClickHandler = function (pin, card) {
+    pin.addEventListener('click', function () {
+      openFullCardHandler(card);
+    });
+  };
+
+  var openFullCardHandler = function (card) {
+    var popupCard = bookingMap.querySelector('.popup');
+    var popupRemoveHandler = function () {
+      bookingMap.querySelector('.popup').remove();
+      document.removeEventListener('keydown', popupEscHandler);
+    };
+
+    var popupEscHandler = function (evt) {
+      if (evt.keyCode === ESCAPE_BUTTON) {
+        popupRemoveHandler();
+      }
+    };
+
+    if (popupCard) {
+      popupRemoveHandler();
+    }
+    bookingMap.insertBefore(createCardElement(card), accommodationFilters);
+    document.addEventListener('keydown', popupEscHandler);
+    var popupClose = bookingMap.querySelector('.popup__close');
+    popupClose.addEventListener('click', popupRemoveHandler);
+  };
+
+
+  for (var j = 1; j < advertPins.length; j++) {
+    openFullCardClickHandler(advertPins[j], generateAds(j));
+  }
+
+  for (var k = 0; k < formDisabledFields.length; k++) {
+    formDisabledFields[k].disabled = false;
+  }
+  bookingForm.querySelector('input[name="address"]').value = mainPinLocationX + ', ' + mainPinLocationY;
+};
+
+mainPinController.addEventListener('mousedown', mapActivityHandler);
+
+mainPinController.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_BUTTON) {
+    mapActivityHandler();
+  }
+});
