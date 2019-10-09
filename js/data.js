@@ -47,6 +47,8 @@
     ADS_COUNT: ADS_COUNT,
     PIN_WIDTH: PIN_WIDTH,
     PIN_HEIGHT: PIN_HEIGHT,
+    MIN_Y: MIN_Y,
+    MAX_Y: MAX_Y,
     generateAds: generateAds
   };
 
