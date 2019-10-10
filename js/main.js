@@ -147,8 +147,6 @@ var fullCardTemplate = document.querySelector('#card')
   .content
   .querySelector('.map__card');
 
-
-
 var createCardElement = function (card) {
   var cardElement = fullCardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = card.offer.title;
