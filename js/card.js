@@ -1,18 +1,17 @@
 'use strict';
 (function () {
-  var cardKeksTemplate = document.querySelector('#card')
-    .content
-    .querySelector('.map__card');
-
   var MAP_OFFER_TYPE_TO_TEXT = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
     house: 'Дом',
     palace: 'дворец'
   };
+  var fullCardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.map__card');
 
   window.createCardElement = function (card) {
-    var cardElement = cardKeksTemplate.cloneNode(true);
+    var cardElement = fullCardTemplate.cloneNode(true);
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
     cardElement.querySelector('.popup__text--price').textContent = card.offer.price;
     cardElement.querySelector('.popup__text--price').insertAdjacentHTML('beforeEnd', '<span>/ночь</span>');

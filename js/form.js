@@ -1,12 +1,12 @@
 'use strict';
 (function () {
-  window.bookingForm = document.querySelector('.ad-form');
   var MAP_OFFER_TYPE_TO_PRICE = {
     flat: '1000',
     bungalo: '0',
     house: '5000',
     palace: '10000'
   };
+  window.bookingForm = document.querySelector('.ad-form');
   var numberOfRooms = window.bookingForm.querySelector('select[name="rooms"]');
   var numberOfGuests = window.bookingForm.querySelector('select[name="capacity"]');
   var accommodationType = window.bookingForm.querySelector('select[name="type"]');
