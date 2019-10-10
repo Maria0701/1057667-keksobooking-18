@@ -3,6 +3,30 @@ var ENTER_BUTTON = 13;
 var ESCAPE_BUTTON = 27;
 var MAIN_PIN_WIDTH = 65;
 var MAIN_PIN_HEIGHT = 65;
+var MAP_OFFER_TYPE_TO_PRICE = {
+  flat: '1000',
+  bungalo: '0',
+  house: '5000',
+  palace: '10000'
+};
+var ACCOMMODATION_TITLE = ['Сдам квартиру', 'Жилье для некурящих', 'Сдам аппартаменты', 'Мебелированные комнаты'];
+var ACCOMMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var CHEKIN_OUT_TIME = ['12:00', '13:00', '14:00'];
+var ACCOMMODATION_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var ACCOMMODATION_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var ACCOMMODATION_DESCRIPTION = ['КВАРТИРА ЦЕЛИКОМ Студия в центре Минска, ст. м. Площадь Победы', 'ОТДЕЛЬНАЯ КОМНАТА В ЖИЛЬЕ ТИПА КВАРТИРА Уютная комната', 'КВАРТИРА ЦЕЛИКОМ Доступные апартаменты в самом центре Минска'];
+var MIN_Y = 130;
+var MAX_Y = 630;
+var MAX_X = 1200;
+var ADS_COUNT = 8;
+var PIN_WIDTH = 40;
+var PIN_HEIGHT = 40;
+var MAP_OFFER_TYPE_TO_TEXT = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  house: 'Дом',
+  palace: 'дворец'
+};
 
 var getRandomInteger = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -24,12 +48,6 @@ var mainPinLocationX = Math.round(parseInt(mainPinController.style.left, 10) - M
 var mainPinLocationY = Math.round(parseInt(mainPinController.style.top, 10) - MAIN_PIN_HEIGHT);
 
 // обработка формы
-var MAP_OFFER_TYPE_TO_PRICE = {
-  flat: '1000',
-  bungalo: '0',
-  house: '5000',
-  palace: '10000'
-};
 var numberOfRooms = bookingForm.querySelector('select[name="rooms"]');
 var numberOfGuests = bookingForm.querySelector('select[name="capacity"]');
 var accommodationType = bookingForm.querySelector('select[name="type"]');
@@ -49,7 +67,7 @@ var accommodationTypeToPriceHandler = function () {
   }
 };
 
-var accomodationMinPriceHandler = function () {
+var accommodationMinPriceHandler = function () {
   accommodationPrice.min = MAP_OFFER_TYPE_TO_PRICE[accommodationType.value];
   accommodationPrice.placeholder = MAP_OFFER_TYPE_TO_PRICE[accommodationType.value];
 };
@@ -62,7 +80,7 @@ var checkInHandler = function () {
 };
 
 accommodationPrice.addEventListener('change', accommodationTypeToPriceHandler);
-accommodationType.addEventListener('change', accomodationMinPriceHandler);
+accommodationType.addEventListener('change', accommodationMinPriceHandler);
 checkInTime.addEventListener('change', checkInHandler);
 checkOutTime.addEventListener('change', checkOutHandler);
 
@@ -80,18 +98,6 @@ changeOfNumberHandler();
 numberOfRooms.addEventListener('change', changeOfNumberHandler);
 numberOfGuests.addEventListener('change', changeOfNumberHandler);
 
-var ACCOMMODATION_TITLE = ['Сдам квартиру', 'Жилье для некурящих', 'Сдам аппартаменты', 'Мебелированные комнаты'];
-var ACCOMMODATION_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var CHEKIN_OUT_TIME = ['12:00', '13:00', '14:00'];
-var ACCOMMODATION_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var ACCOMMODATION_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var ACCOMMODATION_DESCRIPTION = ['КВАРТИРА ЦЕЛИКОМ Студия в центре Минска, ст. м. Площадь Победы', 'ОТДЕЛЬНАЯ КОМНАТА В ЖИЛЬЕ ТИПА КВАРТИРА Уютная комната', 'КВАРТИРА ЦЕЛИКОМ Доступные апартаменты в самом центре Минска'];
-var MIN_Y = 130;
-var MAX_Y = 630;
-var MAX_X = 1200;
-var ADS_COUNT = 8;
-var PIN_WIDTH = 40;
-var PIN_HEIGHT = 40;
 
 var generateAds = function (i) {
   var userLocation = {
@@ -124,8 +130,8 @@ var generateAds = function (i) {
 
 var pinsMap = document.querySelector('.map__pins');
 var cardPopupTemplate = document.querySelector('#pin')
-.content
-.querySelector('.map__pin');
+  .content
+  .querySelector('.map__pin');
 var createPinElement = function (ad) {
   var pinElement = cardPopupTemplate.cloneNode(true);
   pinElement.style.left = ad.location.x - PIN_WIDTH / 2 + 'px';
@@ -137,19 +143,14 @@ var createPinElement = function (ad) {
 
 var accommodationFilters = bookingMap.querySelector('.map__filters-container');
 
-var cardKeksTemplate = document.querySelector('#card')
+var fullCardTemplate = document.querySelector('#card')
   .content
   .querySelector('.map__card');
 
-var MAP_OFFER_TYPE_TO_TEXT = {
-  flat: 'Квартира',
-  bungalo: 'Бунгало',
-  house: 'Дом',
-  palace: 'дворец'
-};
+
 
 var createCardElement = function (card) {
-  var cardElement = cardKeksTemplate.cloneNode(true);
+  var cardElement = fullCardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = card.offer.title;
   cardElement.querySelector('.popup__text--price').textContent = card.offer.price;
   cardElement.querySelector('.popup__text--price').insertAdjacentHTML('beforeEnd', '<span>/ночь</span>');
@@ -200,14 +201,6 @@ var mapActivityHandler = function () {
   var formDisabledFields = bookingForm.querySelectorAll(':disabled');
   pinsMap.appendChild(fragment);
   var advertPins = pinsMap.querySelectorAll('.map__pin');
-
-  //  var openFullCardEnterHandler = function (pin, card, evt) {
-  //    pin.addEventListener('keydown', function () {
-  //      if (evt.keyCode === ENTER_BUTTON) {
-  //        openFullCardHandler(card);
-  //      }
-  //    });
-  //  };
 
   var openFullCardClickHandler = function (pin, card) {
     pin.addEventListener('click', function () {
