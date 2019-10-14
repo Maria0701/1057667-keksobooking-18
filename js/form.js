@@ -7,6 +7,10 @@
     palace: '10000'
   };
   window.bookingForm = document.querySelector('.ad-form');
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
   var numberOfRooms = window.bookingForm.querySelector('select[name="rooms"]');
   var numberOfGuests = window.bookingForm.querySelector('select[name="capacity"]');
   var accommodationType = window.bookingForm.querySelector('select[name="type"]');
