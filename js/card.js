@@ -6,7 +6,6 @@
     house: 'Дом',
     palace: 'дворец'
   };
-
   var fullCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');

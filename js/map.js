@@ -87,12 +87,27 @@
         y: moveEvt.clientY
       };
 
-      if (startCoords.y > window.data.MIN_Y && startCoords.y < window.data.MAX_Y) {
-        mainPinController.style.top = (mainPinController.offsetTop - shift.y) + 'px';
+      var limits = {
+        top: window.data.MIN_Y,
+        right: window.data.MAX_X - mainPinController.offsetWidth,
+        bottom: window.data.MAX_Y,
+        left: window.data.MIN_X
+      };
+
+      if (limits.right < (mainPinController.offsetLeft - shift.x)) {
+        mainPinController.style.left = limits.right + 'px';
+      } else if (limits.left > (mainPinController.offsetLeft - shift.x)) {
+        mainPinController.style.left = limits.left + 'px';
+      } else {
+        mainPinController.style.left = (mainPinController.offsetLeft - shift.x) + 'px';
       }
 
-      if (startCoords.x > bookingMap.getBoundingClientRect().left && startCoords.x < bookingMap.getBoundingClientRect().right) {
-        mainPinController.style.left = (mainPinController.offsetLeft - shift.x) + 'px';
+      if (limits.bottom < (mainPinController.offsetTop - shift.y)) {
+        mainPinController.style.top = limits.bottom + 'px';
+      } else if (limits.top > (mainPinController.offsetTop - shift.y)) {
+        mainPinController.style.top = limits.top + 'px';
+      } else {
+        mainPinController.style.top = (mainPinController.offsetTop - shift.y) + 'px';
       }
 
       detectPinLocation();
