@@ -3,6 +3,10 @@
   var bookingMap = document.querySelector('.map');
   var mainPinController = bookingMap.querySelector('.map__pin--main');
   var pinsMap = document.querySelector('.map__pins');
+  var resetCoords = {
+    y: mainPinController.offsetTop,
+    x: mainPinController.offsetLeft
+  };
 
   var detectPinLocation = function () {
     return (window.bookingForm.querySelector('input[name="address"]').value = Math.round(parseInt(mainPinController.style.left, 10) - window.utils.MAIN_PIN_WIDTH / 2) + ', ' + Math.round(parseInt(mainPinController.style.top, 10) - window.utils.MAIN_PIN_HEIGHT));
@@ -30,6 +34,7 @@
         pin.addEventListener('click', function () {
           openFullCardHandler(card);
         });
+
       };
 
       var openFullCardHandler = function (card) {
@@ -142,4 +147,12 @@
   };
 
   window.backend.getDetails(successHandler, loadErrorHandler);
+
+  window.map = {
+    bookingMap: bookingMap,
+    mainPinController: mainPinController,
+    pinsMap: pinsMap,
+    resetCoords: resetCoords,
+    detectPinLocation: detectPinLocation
+  };
 })();
