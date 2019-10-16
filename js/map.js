@@ -21,10 +21,18 @@
     document.removeEventListener('keydown', popupEscHandler);
   };
 
-  window.onMapPinClick = function (evt) {
+  window.mapPinClickHandler = function (evt) {
     var buttonPins = evt.target.parentElement;
     if (buttonPins.classList.contains('map__pin') && !buttonPins.classList.contains('map__pin--main')) {
       openFullCardHandler(evt.target.card);
+    }
+  };
+
+  window.enterMapHandler = function (evt) {
+    if (evt.keyCode === window.utils.ENTER_BUTTON) {
+      if (!evt.target.classList.contains('map__pin--main')) {
+        openFullCardHandler(evt.target.firstChild.card);
+      }
     }
   };
 
@@ -55,12 +63,8 @@
       pinsMap.appendChild(window.fragment); // отрисовка пинов
       // обработка пинов для активизации карточек
 
-      pinsMap.addEventListener('click', window.onMapPinClick);
-      pinsMap.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.utils.ENTER_BUTTON) {
-          window.onMapPinClick();
-        }
-      });
+      pinsMap.addEventListener('click', window.mapPinClickHandler);
+      pinsMap.addEventListener('keydown', window.enterMapHandler);
       // выбираем все неактивные элемены
       for (var k = 0; k < formDisabledFields.length; k++) {
         formDisabledFields[k].disabled = false;
