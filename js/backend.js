@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var URL = 'https://js.dump.academy/keksobooking/data';
+  var FORM_URL = 'https://js.dump.academy/keksobooking';
 
   var load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -53,6 +54,7 @@
 
   window.backend = {
     getDetails: load,
-    sendForm: save
+    sendForm: save,
+    FORM_URL: FORM_URL
   };
 })();

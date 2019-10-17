@@ -6,7 +6,7 @@
     house: '5000',
     palace: '10000'
   };
-  var FORM_URL = 'https://js.dump.academy/keksobooking';
+
   window.bookingForm = document.querySelector('.ad-form');
   var numberOfRooms = window.bookingForm.querySelector('select[name="rooms"]');
   var numberOfGuests = window.bookingForm.querySelector('select[name="capacity"]');
@@ -60,7 +60,7 @@
   numberOfGuests.addEventListener('change', changeOfNumberHandler);
 
   window.bookingForm.addEventListener('submit', function (evt) {
-    window.backend.sendForm(FORM_URL, new FormData(window.bookingForm), successHandler, loadErrorHandler);
+    window.backend.sendForm(window.backend.FORM_URL, new FormData(window.bookingForm), successHandler, loadErrorHandler);
     evt.preventDefault();
   });
 
