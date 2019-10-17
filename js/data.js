@@ -5,7 +5,6 @@
   var MAX_Y = 630;
   var MAX_X = 1200;
   var MIN_X = 0;
-  var ADS_COUNT = 8;
   var PIN_WIDTH = 40;
   var PIN_HEIGHT = 40;
 
@@ -35,7 +34,6 @@
   };
 
   window.data = {
-    ADS_COUNT: ADS_COUNT,
     PIN_WIDTH: PIN_WIDTH,
     PIN_HEIGHT: PIN_HEIGHT,
     MIN_Y: MIN_Y,

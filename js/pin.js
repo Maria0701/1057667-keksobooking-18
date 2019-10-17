@@ -9,6 +9,7 @@
     pinElement.style.top = ad.location.y + window.data.PIN_HEIGHT + 'px';
     pinElement.querySelector('img').alt = ad.offer.title;
     pinElement.querySelector('img').src = ad.author.avatar;
+    pinElement.querySelector('img').card = ad;
     return pinElement;
   };
 })();
