@@ -18,6 +18,7 @@
     return array.slice(getRandomInteger(0, array.length));
   };
 
+
   window.utils = {
     ENTER_BUTTON: ENTER_BUTTON,
     ESCAPE_BUTTON: ESCAPE_BUTTON,
