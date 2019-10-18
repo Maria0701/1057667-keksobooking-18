@@ -60,7 +60,7 @@
   numberOfGuests.addEventListener('change', changeOfNumberHandler);
 
   window.bookingForm.addEventListener('submit', function (evt) {
-    window.backend.sendForm(window.backend.FORM_URL, new FormData(window.bookingForm), successHandler, loadErrorHandler);
+    window.backend.sendForm(new FormData(window.bookingForm), successHandler, loadErrorHandler);
     evt.preventDefault();
   });
 

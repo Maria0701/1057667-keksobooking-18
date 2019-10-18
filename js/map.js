@@ -1,5 +1,9 @@
 'use strict';
 (function () {
+  var MIN_Y = 130;
+  var MAX_Y = 630;
+  var MAX_X = 1200;
+  var MIN_X = 0;
   var bookingMap = document.querySelector('.map');
   var mainPinController = bookingMap.querySelector('.map__pin--main');
   var pinsMap = document.querySelector('.map__pins');
@@ -99,10 +103,10 @@
         };
 
         var limits = {
-          top: window.data.MIN_Y,
-          right: window.data.MAX_X - mainPinController.offsetWidth,
-          bottom: window.data.MAX_Y,
-          left: window.data.MIN_X
+          top: MIN_Y,
+          right: MAX_X - mainPinController.offsetWidth,
+          bottom: MAX_Y,
+          left: MIN_X
         };
 
         if (limits.right < (mainPinController.offsetLeft - shift.x)) {
