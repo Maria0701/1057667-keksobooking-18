@@ -1,8 +1,16 @@
 'use strict';
 (function () {
+  var MIN_Y = 130;
+  var MAX_Y = 630;
+  var MAX_X = 1200;
+  var MIN_X = 0;
   var bookingMap = document.querySelector('.map');
   var mainPinController = bookingMap.querySelector('.map__pin--main');
   var pinsMap = document.querySelector('.map__pins');
+  var resetCoords = {
+    y: mainPinController.offsetTop,
+    x: mainPinController.offsetLeft
+  };
 
   var detectPinLocation = function () {
     return (window.bookingForm.querySelector('input[name="address"]').value = Math.round(parseInt(mainPinController.style.left, 10) - window.utils.MAIN_PIN_WIDTH / 2) + ', ' + Math.round(parseInt(mainPinController.style.top, 10) - window.utils.MAIN_PIN_HEIGHT));
@@ -61,7 +69,6 @@
       window.bookingForm.classList.remove('ad-form--disabled');
       var formDisabledFields = window.bookingForm.querySelectorAll(':disabled');
       pinsMap.appendChild(window.fragment); // отрисовка пинов
-      // обработка пинов для активизации карточек
 
       pinsMap.addEventListener('click', window.mapPinClickHandler);
       pinsMap.addEventListener('keydown', window.enterMapHandler);
@@ -96,10 +103,10 @@
         };
 
         var limits = {
-          top: window.data.MIN_Y,
-          right: window.data.MAX_X - mainPinController.offsetWidth,
-          bottom: window.data.MAX_Y,
-          left: window.data.MIN_X
+          top: MIN_Y,
+          right: MAX_X - mainPinController.offsetWidth,
+          bottom: MAX_Y,
+          left: MIN_X
         };
 
         if (limits.right < (mainPinController.offsetLeft - shift.x)) {
@@ -149,4 +156,12 @@
   };
 
   window.backend.getDetails(successHandler, loadErrorHandler);
+
+  window.map = {
+    bookingMap: bookingMap,
+    mainPinController: mainPinController,
+    pinsMap: pinsMap,
+    resetCoords: resetCoords,
+    detectPinLocation: detectPinLocation
+  };
 })();
