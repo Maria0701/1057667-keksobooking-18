@@ -1,9 +1,6 @@
 'use strict';
 (function () {
-  var MIN_Y = 130;
-  var MAX_Y = 630;
-  var MAX_X = 1200;
-  var MIN_X = 0;
+
   var bookingMap = document.querySelector('.map');
   var mainPinController = bookingMap.querySelector('.map__pin--main');
   var pinsMap = document.querySelector('.map__pins');
@@ -44,13 +41,24 @@
     }
   };
 
+  var mapActivityHandler = function () {
+    bookingMap.classList.remove('map--faded');
+    window.bookingForm.classList.remove('ad-form--disabled');
+    var formDisabledFields = window.bookingForm.querySelectorAll(':disabled');
+    pinsMap.appendChild(window.fragment); // отрисовка пинов
+    pinsMap.addEventListener('click', window.mapPinClickHandler);
+    pinsMap.addEventListener('keydown', window.enterMapHandler);
+    for (var k = 0; k < formDisabledFields.length; k++) {
+      formDisabledFields[k].disabled = false;
+    }
+    detectPinLocation();
+  };
+
   var openFullCardHandler = function (card) {
     var popupCard = bookingMap.querySelector('.popup');
-    // если в разметке уже есть открытая карточка - удаляем
     if (popupCard) {
       popupRemoveHandler();
     }
-    // формируем карточку
     bookingMap.insertBefore(window.createCardElement(card), accommodationFilters);
     document.addEventListener('keydown', popupEscHandler); // закрытие по эск
     var popupClose = bookingMap.querySelector('.popup__close');
@@ -58,87 +66,8 @@
   };
 
   var successHandler = function (adverts) {
-    window.fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < adverts.length; i++) {
-      window.fragment.appendChild(window.createPinElement(adverts[i]));
-    }
-
-    var mapActivityHandler = function () {
-      bookingMap.classList.remove('map--faded');
-      window.bookingForm.classList.remove('ad-form--disabled');
-      var formDisabledFields = window.bookingForm.querySelectorAll(':disabled');
-      pinsMap.appendChild(window.fragment); // отрисовка пинов
-
-      pinsMap.addEventListener('click', window.mapPinClickHandler);
-      pinsMap.addEventListener('keydown', window.enterMapHandler);
-      // выбираем все неактивные элемены
-      for (var k = 0; k < formDisabledFields.length; k++) {
-        formDisabledFields[k].disabled = false;
-      }
-      // устанавливаем начальные координаты
-      detectPinLocation();
-    };
-
-    mainPinController.addEventListener('mousedown', function (evt) {
-      mapActivityHandler();
-      evt.preventDefault();
-
-      var startCoords = {
-        x: evt.clientX,
-        y: evt.clientY
-      };
-
-      var mouseMoveHandler = function (moveEvt) {
-        moveEvt.preventDefault();
-
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY
-        };
-
-        startCoords = {
-          x: moveEvt.clientX,
-          y: moveEvt.clientY
-        };
-
-        var limits = {
-          top: MIN_Y,
-          right: MAX_X - mainPinController.offsetWidth,
-          bottom: MAX_Y,
-          left: MIN_X
-        };
-
-        if (limits.right < (mainPinController.offsetLeft - shift.x)) {
-          mainPinController.style.left = limits.right + 'px';
-        } else if (limits.left > (mainPinController.offsetLeft - shift.x)) {
-          mainPinController.style.left = limits.left + 'px';
-        } else {
-          mainPinController.style.left = (mainPinController.offsetLeft - shift.x) + 'px';
-        }
-
-        if (limits.bottom < (mainPinController.offsetTop - shift.y)) {
-          mainPinController.style.top = limits.bottom + 'px';
-        } else if (limits.top > (mainPinController.offsetTop - shift.y)) {
-          mainPinController.style.top = limits.top + 'px';
-        } else {
-          mainPinController.style.top = (mainPinController.offsetTop - shift.y) + 'px';
-        }
-
-        detectPinLocation();
-      };
-
-      var mouseUpHandler = function (upEvt) {
-        upEvt.preventDefault();
-
-        detectPinLocation();
-        document.removeEventListener('mousemove', mouseMoveHandler);
-        document.removeEventListener('mouseup', mouseUpHandler);
-      };
-
-      document.addEventListener('mousemove', mouseMoveHandler);
-      document.addEventListener('mouseup', mouseUpHandler);
-    });
+    window.render(adverts);
+    window.pinMovementHandler();
 
     mainPinController.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.utils.ENTER_BUTTON) {
@@ -162,6 +91,7 @@
     mainPinController: mainPinController,
     pinsMap: pinsMap,
     resetCoords: resetCoords,
-    detectPinLocation: detectPinLocation
+    detectPinLocation: detectPinLocation,
+    mapActivityHandler: mapActivityHandler
   };
 })();
