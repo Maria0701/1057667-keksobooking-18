@@ -44,6 +44,7 @@
   var mapActivityHandler = function () {
     bookingMap.classList.remove('map--faded');
     window.bookingForm.classList.remove('ad-form--disabled');
+    window.updatePins();
     var formDisabledFields = window.bookingForm.querySelectorAll(':disabled');
     pinsMap.addEventListener('click', window.mapPinClickHandler);
     pinsMap.addEventListener('keydown', window.enterMapHandler);

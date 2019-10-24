@@ -17,11 +17,8 @@
 
   window.render = function (data) {
     var takeNumber = data.length > 5 ? 5 : data.length;
-    //  window.fragment = document.createDocumentFragment();
-    // window.map.pinsMap.innerHTML = window.map.mainPinController;
     for (var i = 0; i < takeNumber; i++) {
       window.map.pinsMap.appendChild(window.createPinElement(data[i]));
-      // window.fragment.appendChild(window.createPinElement(data[i]));
     }
   };
 })();
