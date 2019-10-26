@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var accomodationTypes = ['flat', 'bungalo', 'house', 'palace'];
+  var ACCOMMODATION_TYPES = ['flat', 'bungalo', 'house', 'palace'];
   var accommodationFilters = document.querySelector('.map__filters-container');
   var filterForm = accommodationFilters.querySelector('.map__filters');
   var accommodationTypeFilter = filterForm.querySelector('select[name="housing-type"]');
@@ -14,7 +14,7 @@
       }
     });
     var sameAccommodationTypes = adverts.filter(function (it) {
-      if (accomodationTypes.includes(changedAccommodationType)) {
+      if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
         return it.offer.type === changedAccommodationType;
       }
       return it.offer.type;
