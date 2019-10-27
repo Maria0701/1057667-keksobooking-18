@@ -14,4 +14,11 @@
     pinElement.querySelector('img').card = ad;
     return pinElement;
   };
+
+  window.render = function (data) {
+    var takeNumber = data.length > 5 ? 5 : data.length;
+    for (var i = 0; i < takeNumber; i++) {
+      window.map.pinsMap.appendChild(window.createPinElement(data[i]));
+    }
+  };
 })();
