@@ -2,6 +2,8 @@
 (function () {
   var ACCOMMODATION_TYPES = ['flat', 'bungalo', 'house', 'palace'];
   var DEFAULT_FILTER_VALUE = 'any';
+  var HIGH_PRICE = 50000;
+  var LOW_PRICE = 10000;
   var accommodationFilters = document.querySelector('.map__filters-container');
   var filterForm = accommodationFilters.querySelector('.map__filters');
   var accommodationTypeFilter = filterForm.querySelector('select[name="housing-type"]');
@@ -17,8 +19,8 @@
   var adverts = [];
 
   var compareArrays = function (where, what) {
-    if (!what) {
-      return true;
+    if (where.length === 0) {
+      return false;
     }
     for (var i = 0; i < what.length; i++) {
       for (var j = 0; j < where.length; j++) {
@@ -33,14 +35,26 @@
     return true;
   };
 
+  var getPriceRange = function (rate) {
+    if (rate > HIGH_PRICE) {
+      rate = 'high';
+    }
+    if (rate < LOW_PRICE) {
+      rate = 'low';
+    }
+    if (rate >= LOW_PRICE && rate <= HIGH_PRICE) {
+      rate = 'middle';
+    }
+    return rate;
+  };
+
   window.updatePins = function () {
     window.map.pinsMap.querySelectorAll('.map__pin').forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         item.remove();
       }
     });
-    var sameAccommodationTypes = adverts.filter(function (it) {
-      console.log (it.offer);
+    var sameAccommodation = adverts.filter(function (it) {
       if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
         return it.offer.type === changedAccommodationType;
       }
@@ -51,60 +65,47 @@
         return String(it.offer.guests) === changedAccommodationGuests;
       }
       if (changedAccommodationPrice && changedAccommodationPrice !== DEFAULT_FILTER_VALUE) {
-        if (it.offer.price > 50000) {
-          it.offer.price = 'high';
-        }
-        if (it.offer.price < 10000) {
-          it.offer.price = 'low';
-        }
-        if (it.offer.price >= 10000 && it.offer.price <= 50000) {
-          it.offer.price = 'middle';
-        }
-        console.log (it.offer.price)
-        return it.offer.price === changedAccommodationPrice;
+        return getPriceRange(it.offer.price) === changedAccommodationPrice;
       }
-    //  if (compareArrays(it.offer.features, changedAccommodationFeatures)) {
-    //      console.log(compareArrays(it.offer.features, changedAccommodationFeatures));
-    //      console.log(changedAccommodationFeatures);
-    //      return it.offer.features ;
-    //  }
-      return it.offer.type;
+      if (changedAccommodationFeatures.length > 0) {
+        return compareArrays(it.offer.features, changedAccommodationFeatures);
+      }
+      return true;
     });
-    window.render(sameAccommodationTypes);
+    window.render(sameAccommodation);
   };
 
-  accommodationTypeFilter.addEventListener('change', function () {
+  window.debounce(accommodationTypeFilter.addEventListener('change', function () {
     changedAccommodationType = accommodationTypeFilter.value;
     window.updatePins();
-  });
+  }));
 
-  accommodationPriceFilter.addEventListener('change', function () {
+  window.debounce(accommodationPriceFilter.addEventListener('change', function () {
     changedAccommodationPrice = accommodationPriceFilter.value;
     window.updatePins();
-  });
+  }));
 
-  accommodationRoomsFilter.addEventListener('change', function () {
+  window.debounce(accommodationRoomsFilter.addEventListener('change', function () {
     changedAccommodationRooms = accommodationRoomsFilter.value;
     window.updatePins();
-  });
+  }));
 
-  accommodationGuestsFilter.addEventListener('change', function () {
+  window.debounce(accommodationGuestsFilter.addEventListener('change', function () {
     changedAccommodationGuests = accommodationGuestsFilter.value;
     window.updatePins();
-  });
+  }));
 
   var chooseFeaturesHandler = function (evt) {
     if (evt.target.tagName === 'INPUT') {
       if (changedAccommodationFeatures.includes(evt.target.value)) {
         changedAccommodationFeatures.splice(changedAccommodationFeatures.indexOf(evt.target.value), 1);
-      } else {
-        changedAccommodationFeatures.push(evt.target.value);
       }
-      window.updatePins();
+      changedAccommodationFeatures.push(evt.target.value);
     }
+    window.updatePins();
   };
 
-  accommodationFeaturesFilter.addEventListener('click', chooseFeaturesHandler);
+  window.debounce(accommodationFeaturesFilter.addEventListener('click', chooseFeaturesHandler));
 
   var successHandler = function (data) {
     adverts = data;
