@@ -55,22 +55,40 @@
       }
     });
     var sameAccommodation = adverts.filter(function (it) {
-      if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
-        return it.offer.type === changedAccommodationType;
+      var sameAccommodationType = function () {
+        if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
+          return it.offer.type === changedAccommodationType;
+        }
+        return true;
+      };
+      var sameAccommodationRooms = function () {
+        if (changedAccommodationRooms && changedAccommodationRooms !== DEFAULT_FILTER_VALUE) {
+          return String(it.offer.rooms) === changedAccommodationRooms;
+        }
+        return true;
+      };
+      var sameAccommodationGuests = function () {
+        if (changedAccommodationGuests && changedAccommodationGuests !== DEFAULT_FILTER_VALUE) {
+          return String(it.offer.guests) === changedAccommodationGuests;
+        }
+        return true;
+      };
+      var sameAccommodationPrice = function () {
+        if (changedAccommodationPrice && changedAccommodationPrice !== DEFAULT_FILTER_VALUE) {
+          return getPriceRange(it.offer.price) === changedAccommodationPrice;
+        }
+        return true;
+      };
+      var sameAccommodationFeatures = function () {
+        if (changedAccommodationFeatures.length > 0) {
+          return compareArrays(it.offer.features, changedAccommodationFeatures);
+        }
+        return true;
+      };
+      if (sameAccommodationType() && sameAccommodationRooms() && sameAccommodationGuests() && sameAccommodationPrice() && sameAccommodationFeatures()) {
+        return true;
       }
-      if (changedAccommodationRooms && changedAccommodationRooms !== DEFAULT_FILTER_VALUE) {
-        return String(it.offer.rooms) === changedAccommodationRooms;
-      }
-      if (changedAccommodationGuests && changedAccommodationGuests !== DEFAULT_FILTER_VALUE) {
-        return String(it.offer.guests) === changedAccommodationGuests;
-      }
-      if (changedAccommodationPrice && changedAccommodationPrice !== DEFAULT_FILTER_VALUE) {
-        return getPriceRange(it.offer.price) === changedAccommodationPrice;
-      }
-      if (changedAccommodationFeatures.length > 0) {
-        return compareArrays(it.offer.features, changedAccommodationFeatures);
-      }
-      return true;
+      return false;
     });
     window.render(sameAccommodation);
   };
@@ -99,6 +117,7 @@
     if (evt.target.tagName === 'INPUT') {
       if (changedAccommodationFeatures.includes(evt.target.value)) {
         changedAccommodationFeatures.splice(changedAccommodationFeatures.indexOf(evt.target.value), 1);
+        window.updatePins();
       }
       changedAccommodationFeatures.push(evt.target.value);
     }
