@@ -82,7 +82,6 @@
       };
       var sameAccommodationFeatures = function () {
         if (changedAccommodationFeatures.length > 0) {
-          console.log (changedAccommodationFeatures);
           return compareArrays(it.offer.features, changedAccommodationFeatures);
         }
         return true;
