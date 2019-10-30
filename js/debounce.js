@@ -1,4 +1,3 @@
-// Файл debounce.js
 'use strict';
 (function () {
   var DEBOUNCE_INTERVAL = 300;
