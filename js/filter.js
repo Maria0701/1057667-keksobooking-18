@@ -91,22 +91,22 @@
     window.render(sameAccommodation);
   };
 
-  window.debounce(accommodationTypeFilter.addEventListener('change', function () {
+  accommodationTypeFilter.addEventListener('change', window.debounce(function () {
     changedAccommodationType = accommodationTypeFilter.value;
     window.updatePins();
   }));
 
-  window.debounce(accommodationPriceFilter.addEventListener('change', function () {
+  accommodationPriceFilter.addEventListener('change', window.debounce(function () {
     changedAccommodationPrice = accommodationPriceFilter.value;
     window.updatePins();
   }));
 
-  window.debounce(accommodationRoomsFilter.addEventListener('change', function () {
+  accommodationRoomsFilter.addEventListener('change', window.debounce(function () {
     changedAccommodationRooms = accommodationRoomsFilter.value;
     window.updatePins();
   }));
 
-  window.debounce(accommodationGuestsFilter.addEventListener('change', function () {
+  accommodationGuestsFilter.addEventListener('change', window.debounce(function () {
     changedAccommodationGuests = accommodationGuestsFilter.value;
     window.updatePins();
   }));
@@ -118,11 +118,11 @@
       } else {
         changedAccommodationFeatures.push(evt.target.value);
       }
-      window.updatePins();
+      window.debounce(window.updatePins());
     }
   };
 
-  window.debounce(accommodationFeaturesFilter.addEventListener('click', chooseFeaturesHandler));
+  accommodationFeaturesFilter.addEventListener('click', window.debounce(chooseFeaturesHandler));
 
   var successHandler = function (data) {
     adverts = data;
