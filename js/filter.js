@@ -118,7 +118,7 @@
       } else {
         changedAccommodationFeatures.push(evt.target.value);
       }
-      window.debounce(window.updatePins());
+      window.updatePins();
     }
   };
 
