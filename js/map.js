@@ -5,6 +5,7 @@
   var mainPinController = bookingMap.querySelector('.map__pin--main');
   var pinsMap = document.querySelector('.map__pins');
   var accommodationFilters = bookingMap.querySelector('.map__filters-container');
+  var adressInput = window.bookingForm.querySelector('input[name="address"]');
 
   var resetCoords = {
     y: mainPinController.offsetTop,
@@ -12,7 +13,7 @@
   };
 
   var detectPinLocation = function () {
-    return (window.bookingForm.querySelector('input[name="address"]').value = Math.round(parseInt(mainPinController.style.left, 10) - window.utils.MAIN_PIN_WIDTH / 2) + ', ' + Math.round(parseInt(mainPinController.style.top, 10) - window.utils.MAIN_PIN_HEIGHT));
+    return (adressInput.value = Math.round(parseInt(mainPinController.style.left, 10) + window.utils.MAIN_PIN_WIDTH / 2) + ', ' + Math.round(parseInt(mainPinController.style.top, 10) + window.utils.MAIN_PIN_HEIGHT));
   };
 
   var popupEscHandler = function (evt) {
@@ -26,14 +27,14 @@
     document.removeEventListener('keydown', popupEscHandler);
   };
 
-  window.mapPinClickHandler = function (evt) {
+  var mapPinClickHandler = function (evt) {
     var buttonPins = evt.target.parentElement;
     if (buttonPins.classList.contains('map__pin') && !buttonPins.classList.contains('map__pin--main')) {
       openFullCardHandler(evt.target.card);
     }
   };
 
-  window.enterMapHandler = function (evt) {
+  var enterMapHandler = function (evt) {
     if (evt.keyCode === window.utils.ENTER_BUTTON) {
       if (!evt.target.classList.contains('map__pin--main')) {
         openFullCardHandler(evt.target.firstChild.card);
@@ -46,11 +47,11 @@
     window.bookingForm.classList.remove('ad-form--disabled');
     window.updatePins();
     var formDisabledFields = window.bookingForm.querySelectorAll(':disabled');
-    pinsMap.addEventListener('click', window.mapPinClickHandler);
-    pinsMap.addEventListener('keydown', window.enterMapHandler);
-    for (var k = 0; k < formDisabledFields.length; k++) {
-      formDisabledFields[k].disabled = false;
-    }
+    pinsMap.addEventListener('click', mapPinClickHandler);
+    pinsMap.addEventListener('keydown', enterMapHandler);
+    formDisabledFields.forEach(function (elem) {
+      elem.disabled = false;
+    });
     detectPinLocation();
   };
 
@@ -71,6 +72,7 @@
     pinsMap: pinsMap,
     resetCoords: resetCoords,
     detectPinLocation: detectPinLocation,
-    mapActivityHandler: mapActivityHandler
+    mapActivityHandler: mapActivityHandler,
+    popupRemoveHandler: popupRemoveHandler
   };
 })();

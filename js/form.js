@@ -6,6 +6,14 @@
     house: '5000',
     palace: '10000'
   };
+  var MAP_PRICE_TO_OFFER_TYPE = {
+    price1000: 'flat',
+    price0: 'bungalo',
+    price5000: 'house',
+    price10000: 'palace'
+  };
+  var MAX_ROOMS = '100';
+  var MIN_ROOMS = '0';
 
   window.bookingForm = document.querySelector('.ad-form');
   var numberOfRooms = window.bookingForm.querySelector('select[name="rooms"]');
@@ -17,14 +25,14 @@
 
 
   var accommodationTypeToPriceHandler = function () {
-    if (accommodationPrice.value >= 10000) {
-      accommodationType.value = 'palace';
-    } else if (accommodationPrice.value >= 5000 && accommodationPrice.value < 10000) {
-      accommodationType.value = 'house';
-    } else if (accommodationPrice.value >= 1000 && accommodationPrice.value < 5000) {
-      accommodationType.value = 'flat';
+    if (accommodationPrice.value >= Number(MAP_OFFER_TYPE_TO_PRICE.palace)) {
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price10000;
+    } else if (accommodationPrice.value >= Number(MAP_OFFER_TYPE_TO_PRICE.house) && accommodationPrice.value < Number(MAP_OFFER_TYPE_TO_PRICE.palace)) {
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price5000;
+    } else if (accommodationPrice.value >= Number(MAP_OFFER_TYPE_TO_PRICE.flat) && accommodationPrice.value < Number(MAP_OFFER_TYPE_TO_PRICE.house)) {
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price1000;
     } else {
-      accommodationType.value = 'bungalo';
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price0;
     }
   };
 
@@ -46,9 +54,9 @@
   checkOutTime.addEventListener('change', checkOutHandler);
 
   var changeOfNumberHandler = function () {
-    if (numberOfRooms.value === '100' && numberOfGuests.value === '0') {
+    if (numberOfRooms.value === MAX_ROOMS && numberOfGuests.value === MIN_ROOMS) {
       numberOfRooms.setCustomValidity('');
-    } else if (numberOfRooms.value >= numberOfGuests.value && numberOfRooms.value !== '100' && numberOfGuests.value !== '0') {
+    } else if (numberOfRooms.value >= numberOfGuests.value && numberOfRooms.value !== MAX_ROOMS && numberOfGuests.value !== MIN_ROOMS) {
       numberOfRooms.setCustomValidity('');
     } else {
       numberOfRooms.setCustomValidity('Количество гостей больше больше количества комнат');
@@ -88,9 +96,11 @@
   var successHandler = function () {
     window.bookingForm.reset();
     var allPins = document.querySelectorAll('.map__pin');
-    for (var i = 1; i < allPins.length; i++) {
-      window.map.pinsMap.removeChild(allPins[i]);
-    }
+    allPins.forEach(function (pin) {
+      if (!pin.classList.contains('map__pin--main')) {
+        window.map.pinsMap.removeChild(pin);
+      }
+    });
     if (window.map.bookingMap.querySelector('.popup')) {
       window.map.bookingMap.querySelector('.popup').remove();
     }
@@ -98,6 +108,14 @@
     window.map.mainPinController.style.left = window.map.resetCoords.x + 'px';
     window.map.detectPinLocation();
     loadHandler(successTemplate, '.success');
+    window.map.bookingMap.classList.add('map--faded');
+    window.bookingForm.classList.add('ad-form--disabled');
+    window.bookingForm.querySelectorAll('input').forEach(function (elem) {
+      elem.disabled = true;
+    });
+    window.bookingForm.querySelectorAll('select').forEach(function (elem) {
+      elem.disabled = true;
+    });
   };
 
   var successTemplate = document.querySelector('#success')
@@ -107,6 +125,4 @@
   var errorTemplate = document.querySelector('#error')
     .content
     .querySelector('.error');
-
-
 })();

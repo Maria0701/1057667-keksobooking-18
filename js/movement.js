@@ -28,9 +28,9 @@
         };
 
         var limits = {
-          top: MIN_Y,
+          top: MIN_Y - window.utils.MAIN_PIN_HEIGHT,
           right: MAX_X - window.map.mainPinController.offsetWidth,
-          bottom: MAX_Y,
+          bottom: MAX_Y - window.utils.MAIN_PIN_HEIGHT,
           left: MIN_X
         };
 

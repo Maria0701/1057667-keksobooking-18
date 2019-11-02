@@ -55,6 +55,9 @@
         item.remove();
       }
     });
+    if (window.map.bookingMap.querySelector('.popup')) {
+      window.map.popupRemoveHandler();
+    }
     var sameAccommodation = adverts.filter(function (it) {
       var sameAccommodationType = function () {
         if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
@@ -88,7 +91,7 @@
       };
       return sameAccommodationType() && sameAccommodationRooms() && sameAccommodationGuests() && sameAccommodationPrice() && sameAccommodationFeatures();
     });
-    window.render(sameAccommodation);
+    window.pin.render(sameAccommodation);
   };
 
   accommodationTypeFilter.addEventListener('change', window.debounce(function () {
