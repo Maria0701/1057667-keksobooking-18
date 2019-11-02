@@ -14,7 +14,6 @@
   var accommodationPriceFilter = filterForm.querySelector('select[name="housing-price"]');
   var accommodationRoomsFilter = filterForm.querySelector('select[name="housing-rooms"]');
   var accommodationGuestsFilter = filterForm.querySelector('select[name="housing-guests"]');
-  var accommodationFeaturesFilter = filterForm.querySelector('.map__features');
   var changedAccommodationType;
   var changedAccommodationPrice;
   var changedAccommodationRooms;
@@ -47,6 +46,17 @@
       return LOW_PRICE;
     }
     return MIDDLE_PRICE;
+  };
+
+  var chooseFeaturesHandler = function (evt) {
+    if (evt.target.tagName === INPUT_TAG_NAME) {
+      if (changedAccommodationFeatures.includes(evt.target.value)) {
+        changedAccommodationFeatures.splice(changedAccommodationFeatures.indexOf(evt.target.value), 1);
+      } else {
+        changedAccommodationFeatures.push(evt.target.value);
+      }
+      window.updatePins();
+    }
   };
 
   window.updatePins = function () {
@@ -94,38 +104,22 @@
     window.pin.render(sameAccommodation);
   };
 
-  accommodationTypeFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationType = accommodationTypeFilter.value;
-    window.updatePins();
-  }));
-
-  accommodationPriceFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationPrice = accommodationPriceFilter.value;
-    window.updatePins();
-  }));
-
-  accommodationRoomsFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationRooms = accommodationRoomsFilter.value;
-    window.updatePins();
-  }));
-
-  accommodationGuestsFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationGuests = accommodationGuestsFilter.value;
-    window.updatePins();
-  }));
-
-  var chooseFeaturesHandler = function (evt) {
-    if (evt.target.tagName === INPUT_TAG_NAME) {
-      if (changedAccommodationFeatures.includes(evt.target.value)) {
-        changedAccommodationFeatures.splice(changedAccommodationFeatures.indexOf(evt.target.value), 1);
-      } else {
-        changedAccommodationFeatures.push(evt.target.value);
-      }
-      window.updatePins();
+  accommodationFilters.addEventListener('change', function (evt) {
+    if (evt.target === accommodationTypeFilter) {
+      changedAccommodationType = evt.target.value;
     }
-  };
-
-  accommodationFeaturesFilter.addEventListener('click', window.debounce(chooseFeaturesHandler));
+    if (evt.target === accommodationPriceFilter) {
+      changedAccommodationPrice = evt.target.value;
+    }
+    if (evt.target === accommodationRoomsFilter) {
+      changedAccommodationRooms = evt.target.value;
+    }
+    if (evt.target === accommodationGuestsFilter) {
+      changedAccommodationGuests = evt.target.value;
+    }
+    chooseFeaturesHandler(evt);
+    window.updatePins();
+  });
 
   var successHandler = function (data) {
     adverts = data;
