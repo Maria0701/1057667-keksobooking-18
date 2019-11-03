@@ -4,7 +4,7 @@
   var MAX_Y = 630;
   var MAX_X = 1200;
   var MIN_X = 0;
-  window.pinMovementHandler = function () {
+  var pinMovementHandler = function () {
     window.map.mainPinController.addEventListener('mousedown', function (evt) {
       window.map.mapActivityHandler();
       evt.preventDefault();
@@ -64,4 +64,5 @@
       document.addEventListener('mouseup', mouseUpHandler);
     });
   };
+  pinMovementHandler();
 })();

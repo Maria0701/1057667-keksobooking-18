@@ -43,9 +43,9 @@
   };
 
   var mapActivityHandler = function () {
+    window.loadSimilarAds();
     bookingMap.classList.remove('map--faded');
     window.bookingForm.classList.remove('ad-form--disabled');
-    window.updatePins();
     var formDisabledFields = window.bookingForm.querySelectorAll(':disabled');
     pinsMap.addEventListener('click', mapPinClickHandler);
     pinsMap.addEventListener('keydown', enterMapHandler);
@@ -65,6 +65,12 @@
     var popupClose = bookingMap.querySelector('.popup__close');
     popupClose.addEventListener('click', popupRemoveHandler); // закрытие по кнопке
   };
+
+  mainPinController.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === window.utils.ENTER_BUTTON) {
+      mapActivityHandler(window.utils.MAIN_PIN_HEIGHT);
+    }
+  });
 
   window.map = {
     bookingMap: bookingMap,

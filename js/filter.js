@@ -55,7 +55,6 @@
       } else {
         changedAccommodationFeatures.push(evt.target.value);
       }
-      window.updatePins();
     }
   };
 
@@ -68,6 +67,7 @@
     if (window.map.bookingMap.querySelector('.popup')) {
       window.map.popupRemoveHandler();
     }
+
     var sameAccommodation = adverts.filter(function (it) {
       var sameAccommodationType = function () {
         if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
@@ -104,7 +104,7 @@
     window.pin.render(sameAccommodation);
   };
 
-  accommodationFilters.addEventListener('change', function (evt) {
+  var accomodationFiltersHandler = window.debounce(function (evt) {
     if (evt.target === accommodationTypeFilter) {
       changedAccommodationType = evt.target.value;
     }
@@ -121,15 +121,7 @@
     window.updatePins();
   });
 
-  var successHandler = function (data) {
-    adverts = data;
-    window.pinMovementHandler();
-    window.map.mainPinController.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.utils.ENTER_BUTTON) {
-        window.map.mapActivityHandler(window.utils.MAIN_PIN_HEIGHT);
-      }
-    });
-  };
+  accommodationFilters.addEventListener('change', accomodationFiltersHandler);
 
   var errorTemplate = document.querySelector('#error')
     .content
@@ -138,6 +130,12 @@
   var loadErrorHandler = function () {
     window.map.bookingMap.appendChild(errorTemplate.cloneNode(true));
   };
+  var successHandler = function (data) {
+    adverts = data;
+    window.updatePins();
+  };
 
-  window.backend.getDetails(successHandler, loadErrorHandler);
+  window.loadSimilarAds = function () {
+    window.backend.getDetails(successHandler, loadErrorHandler);
+  };
 })();
