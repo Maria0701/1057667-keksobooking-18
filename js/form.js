@@ -116,6 +116,7 @@
     window.bookingForm.querySelectorAll('select').forEach(function (elem) {
       elem.disabled = true;
     });
+    window.map.mainPinController.addEventListener('mousedown', window.map.mapActivityHandler);
   };
 
   var successTemplate = document.querySelector('#success')
