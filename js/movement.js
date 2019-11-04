@@ -4,9 +4,9 @@
   var MAX_Y = 630;
   var MAX_X = 1200;
   var MIN_X = 0;
-  var pinMovementHandler = function () {
+  window.pinMovementHandler = function () {
     window.map.mainPinController.addEventListener('mousedown', function (evt) {
-      window.map.mapActivityHandler();
+    //  window.map.mapActivityHandler();
       evt.preventDefault();
 
       var startCoords = {
@@ -64,5 +64,4 @@
       document.addEventListener('mouseup', mouseUpHandler);
     });
   };
-  pinMovementHandler();
 })();

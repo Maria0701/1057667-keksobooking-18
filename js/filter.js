@@ -104,7 +104,7 @@
     window.pin.render(sameAccommodation);
   };
 
-  var accomodationFiltersHandler = window.debounce(function (evt) {
+  var accommodationFiltersHandler = window.debounce(function (evt) {
     if (evt.target === accommodationTypeFilter) {
       changedAccommodationType = evt.target.value;
     }
@@ -121,7 +121,7 @@
     window.updatePins();
   });
 
-  accommodationFilters.addEventListener('change', accomodationFiltersHandler);
+  accommodationFilters.addEventListener('change', accommodationFiltersHandler);
 
   var errorTemplate = document.querySelector('#error')
     .content
@@ -130,8 +130,10 @@
   var loadErrorHandler = function () {
     window.map.bookingMap.appendChild(errorTemplate.cloneNode(true));
   };
+
   var successHandler = function (data) {
     adverts = data;
+    window.map.mainPinController.removeEventListener('mousedown', window.map.mapActivityHandler);
     window.updatePins();
   };
 

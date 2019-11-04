@@ -5,7 +5,7 @@
   var mainPinController = bookingMap.querySelector('.map__pin--main');
   var pinsMap = document.querySelector('.map__pins');
   var accommodationFilters = bookingMap.querySelector('.map__filters-container');
-  var adressInput = window.bookingForm.querySelector('input[name="address"]');
+  var adressInput = window.bookingForm.querySelector('input[name="adress"]');
 
   var resetCoords = {
     y: mainPinController.offsetTop,
@@ -52,6 +52,7 @@
     formDisabledFields.forEach(function (elem) {
       elem.disabled = false;
     });
+    window.pinMovementHandler();
     detectPinLocation();
   };
 
@@ -71,6 +72,8 @@
       mapActivityHandler(window.utils.MAIN_PIN_HEIGHT);
     }
   });
+
+  mainPinController.addEventListener('mousedown', mapActivityHandler);
 
   window.map = {
     bookingMap: bookingMap,
