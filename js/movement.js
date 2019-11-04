@@ -6,7 +6,6 @@
   var MIN_X = 0;
   window.pinMovementHandler = function () {
     window.map.mainPinController.addEventListener('mousedown', function (evt) {
-    //  window.map.mapActivityHandler();
       evt.preventDefault();
 
       var startCoords = {
