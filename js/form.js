@@ -7,10 +7,10 @@
     palace: '10000'
   };
   var MAP_PRICE_TO_OFFER_TYPE = {
-    price1000: 'flat',
-    price0: 'bungalo',
-    price5000: 'house',
-    price10000: 'palace'
+    '1000': 'flat',
+    '0': 'bungalo',
+    '5000': 'house',
+    '10000': 'palace'
   };
   var MAX_ROOMS = '100';
   var MIN_ROOMS = '0';
@@ -26,13 +26,13 @@
 
   var accommodationTypeToPriceHandler = function () {
     if (accommodationPrice.value >= Number(MAP_OFFER_TYPE_TO_PRICE.palace)) {
-      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price10000;
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE[10000];
     } else if (accommodationPrice.value >= Number(MAP_OFFER_TYPE_TO_PRICE.house) && accommodationPrice.value < Number(MAP_OFFER_TYPE_TO_PRICE.palace)) {
-      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price5000;
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE[5000];
     } else if (accommodationPrice.value >= Number(MAP_OFFER_TYPE_TO_PRICE.flat) && accommodationPrice.value < Number(MAP_OFFER_TYPE_TO_PRICE.house)) {
-      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price1000;
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE[1000];
     } else {
-      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE.price0;
+      accommodationType.value = MAP_PRICE_TO_OFFER_TYPE[0];
     }
   };
 
