@@ -14,7 +14,6 @@
   var accommodationPriceFilter = filterForm.querySelector('select[name="housing-price"]');
   var accommodationRoomsFilter = filterForm.querySelector('select[name="housing-rooms"]');
   var accommodationGuestsFilter = filterForm.querySelector('select[name="housing-guests"]');
-  var accommodationFeaturesFilter = filterForm.querySelector('.map__features');
   var changedAccommodationType;
   var changedAccommodationPrice;
   var changedAccommodationRooms;
@@ -49,12 +48,26 @@
     return MIDDLE_PRICE;
   };
 
+  var chooseFeaturesHandler = function (evt) {
+    if (evt.target.tagName === INPUT_TAG_NAME) {
+      if (changedAccommodationFeatures.includes(evt.target.value)) {
+        changedAccommodationFeatures.splice(changedAccommodationFeatures.indexOf(evt.target.value), 1);
+      } else {
+        changedAccommodationFeatures.push(evt.target.value);
+      }
+    }
+  };
+
   window.updatePins = function () {
     window.map.pinsMap.querySelectorAll('.map__pin').forEach(function (item) {
       if (!item.classList.contains('map__pin--main')) {
         item.remove();
       }
     });
+    if (window.map.bookingMap.querySelector('.popup')) {
+      window.map.popupRemoveHandler();
+    }
+
     var sameAccommodation = adverts.filter(function (it) {
       var sameAccommodationType = function () {
         if (ACCOMMODATION_TYPES.includes(changedAccommodationType)) {
@@ -88,51 +101,27 @@
       };
       return sameAccommodationType() && sameAccommodationRooms() && sameAccommodationGuests() && sameAccommodationPrice() && sameAccommodationFeatures();
     });
-    window.render(sameAccommodation);
+    window.pin.render(sameAccommodation);
   };
 
-  accommodationTypeFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationType = accommodationTypeFilter.value;
-    window.updatePins();
-  }));
-
-  accommodationPriceFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationPrice = accommodationPriceFilter.value;
-    window.updatePins();
-  }));
-
-  accommodationRoomsFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationRooms = accommodationRoomsFilter.value;
-    window.updatePins();
-  }));
-
-  accommodationGuestsFilter.addEventListener('change', window.debounce(function () {
-    changedAccommodationGuests = accommodationGuestsFilter.value;
-    window.updatePins();
-  }));
-
-  var chooseFeaturesHandler = function (evt) {
-    if (evt.target.tagName === INPUT_TAG_NAME) {
-      if (changedAccommodationFeatures.includes(evt.target.value)) {
-        changedAccommodationFeatures.splice(changedAccommodationFeatures.indexOf(evt.target.value), 1);
-      } else {
-        changedAccommodationFeatures.push(evt.target.value);
-      }
-      window.updatePins();
+  var accommodationFiltersHandler = window.debounce(function (evt) {
+    if (evt.target === accommodationTypeFilter) {
+      changedAccommodationType = evt.target.value;
     }
-  };
+    if (evt.target === accommodationPriceFilter) {
+      changedAccommodationPrice = evt.target.value;
+    }
+    if (evt.target === accommodationRoomsFilter) {
+      changedAccommodationRooms = evt.target.value;
+    }
+    if (evt.target === accommodationGuestsFilter) {
+      changedAccommodationGuests = evt.target.value;
+    }
+    chooseFeaturesHandler(evt);
+    window.updatePins();
+  });
 
-  accommodationFeaturesFilter.addEventListener('click', window.debounce(chooseFeaturesHandler));
-
-  var successHandler = function (data) {
-    adverts = data;
-    window.pinMovementHandler();
-    window.map.mainPinController.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.utils.ENTER_BUTTON) {
-        window.map.mapActivityHandler(window.utils.MAIN_PIN_HEIGHT);
-      }
-    });
-  };
+  accommodationFilters.addEventListener('change', accommodationFiltersHandler);
 
   var errorTemplate = document.querySelector('#error')
     .content
@@ -142,5 +131,13 @@
     window.map.bookingMap.appendChild(errorTemplate.cloneNode(true));
   };
 
-  window.backend.getDetails(successHandler, loadErrorHandler);
+  var successHandler = function (data) {
+    adverts = data;
+    window.map.mainPinController.removeEventListener('mousedown', window.map.mapActivityHandler);
+    window.updatePins();
+  };
+
+  window.loadSimilarAds = function () {
+    window.backend.getDetails(successHandler, loadErrorHandler);
+  };
 })();
